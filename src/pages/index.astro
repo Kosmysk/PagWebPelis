@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MovieSearchApp from '../components/MovieSearchApp.jsx';
+---
+
+<Layout title="Buscador de Películas">
+  <main class="min-h-screen bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+      <header class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          🎬 Buscador de Películas
+        </h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Descubre y explora miles de películas con información detallada, reseñas y más.
+        </p>
+      </header>
+      
+      <MovieSearchApp client:load />
+    </div>
+  </main>
+</Layout>
