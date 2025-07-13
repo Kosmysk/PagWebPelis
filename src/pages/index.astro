@@ -1,21 +1,56 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import MovieSearchApp from '../components/MovieSearchApp.jsx';
+import MovingBackground from '../components/MovingBackground.jsx';
 ---
 
 <Layout title="Buscador de Películas">
-  <main class="min-h-screen bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
-      <header class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          🎬 Buscador de Películas
-        </h1>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Descubre y explora miles de películas con información detallada, reseñas y más.
-        </p>
-      </header>
-      
-      <MovieSearchApp client:load />
+  <style>
+    @keyframes scroll-left {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    
+    @keyframes scroll-right {
+      0% {
+        transform: translateX(-50%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+    
+    .animate-scroll-left {
+      animation: scroll-left linear infinite;
+    }
+    
+    .animate-scroll-right {
+      animation: scroll-right linear infinite;
+    }
+  </style>
+  
+  <main class="min-h-screen relative">
+    <!-- Fondo en movimiento -->
+    <MovingBackground client:load />
+    
+    <!-- Contenido principal -->
+    <div class="relative z-20">
+      <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
+            🎬 Buscador de Películas
+          </h1>
+          <p class="text-xl text-gray-200 max-w-2xl mx-auto drop-shadow-md">
+            Descubre y explora miles de películas con información detallada, reparto, reseñas, trailer y más.
+          </p>
+        </header>
+        
+        <MovieSearchApp client:load />
+      </div>
     </div>
   </main>
 </Layout>
