@@ -92,3 +92,22 @@ export const tmdbService = {
     }
   },
 };
+export async function getMovieReviews(movieId) {
+  const url = `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`;
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4MDY0MjM5MmRhMzYwMmUzNzAyODY3MjZkYzU3NmJkMCIsIm5iZiI6MTc1MTM0Mzg3NS44NzksInN1YiI6IjY4NjM2MzAzZjg1ODdhM2JlNGU2NDg3MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.xTrmxLm8jmyR4fxSJMKd9y0yxao-5hXU8CDm-Wvoez8'
+    }
+  };
+  
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data.results || [];
+  } catch (error) {
+    console.error('Error fetching movie reviews:', error);
+    return [];
+  }
+}
