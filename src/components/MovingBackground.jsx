@@ -75,10 +75,8 @@ const MovingBackground = () => {
           key={i}
           className={`flex animate-scroll-${i % 2 === 0 ? 'left' : 'right'} absolute`}
           style={{
-            top: `${i * 20}%`, // Aumentado de 16% a 20% para más espacio vertical
-            width: '200%',
-            animationDelay: `${i * 0.5}s`,
-            animationDuration: `${70 + i * 15}s` // Animación más lenta para mejor visualización
+            top: `${i * 20}%`,
+            width: '200%'
           }}
         >
           {rowMovies.map((movie, index) => (

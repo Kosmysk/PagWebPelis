@@ -45,13 +45,6 @@ const MovieCard = ({ movie }) => {
         <p className="text-gray-700 text-sm line-clamp-3 mb-4 leading-relaxed">
           {movie.overview || 'Sin descripción disponible.'}
         </p>
-        
-{/*         <a
-          href={`/movie/${movie.id}`}
-          className="inline-block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
-        >
-          Ver Detalles
-        </a> */}
       </div>
     </div>
   );
