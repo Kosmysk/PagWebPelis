@@ -49,7 +49,9 @@ const MovieSearchApp = () => {
       } else {
         data = await getPopularMovies(page);
       }
-      setMovies(data.results);
+      setMovies(prev =>
+        page === 1 ? data.results : [...prev, ...data.results]
+      );
       setTotalPages(data.total_pages);
       setSearchQuery(query);
       setCurrentPage(page);
