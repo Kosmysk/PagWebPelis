@@ -1,3 +1,4 @@
+// src/components/MovieSearchApp.jsx
 import React, { useState, useEffect } from 'react';
 import MovieSearch from './MovieSearch';
 import MovieGrid from './MovieGrid';
@@ -5,102 +6,108 @@ import LoadingSpinner from './LoadingSpinner';
 import { tmdbService } from '../services/tmdb.js';
 
 const MovieSearchApp = () => {
+  const {
+    getGenres,
+    getMoviesByGenre,
+    searchMovies,
+    getPopularMovies,
+  } = tmdbService;
+
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [error, setError] = useState(null);
+  const [genres, setGenres] = useState([]);
 
-  // Cargar películas populares al inicio
+  // Cargar géneros y películas populares al inicio
   useEffect(() => {
-    loadPopularMovies();
+    const init = async () => {
+      try {
+        const list = await getGenres();
+        setGenres(list);
+      } catch (err) {
+        console.error('Error fetching genres', err);
+      }
+      loadFilteredMovies('', '', 1);
+    };
+    init();
   }, []);
 
-  const loadPopularMovies = async () => {
+  // Función genérica para filtrar/search/discover
+  const loadFilteredMovies = async (query, genreId, page = 1) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await tmdbService.getPopularMovies();
-      setMovies(data.results);
-      setTotalPages(data.total_pages);
-      setSearchQuery('');
-    } catch (err) {
-      setError('Error al cargar películas populares');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearch = async (query) => {
-    if (!query.trim()) return;
-    
-    setLoading(true);
-    setError(null);
-    setCurrentPage(1);
-    
-    try {
-      const data = await tmdbService.searchMovies(query);
+      let data;
+      if (genreId) {
+        data = await getMoviesByGenre(genreId, page);
+      } else if (query) {
+        data = await searchMovies(query, page);
+      } else {
+        data = await getPopularMovies(page);
+      }
       setMovies(data.results);
       setTotalPages(data.total_pages);
       setSearchQuery(query);
+      setCurrentPage(page);
+      setSelectedGenre(genreId);
     } catch (err) {
-      setError('Error al buscar películas');
+      setError('Error al filtrar películas');
       console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (query) => {
+    loadFilteredMovies(query.trim(), selectedGenre, 1);
   };
 
   const handleClear = () => {
-    loadPopularMovies();
+    loadFilteredMovies('', '', 1);
   };
 
-  const loadMoreMovies = async () => {
+  const loadMoreMovies = () => {
     if (currentPage >= totalPages) return;
-    
-    setLoading(true);
-    const nextPage = currentPage + 1;
-    
-    try {
-      const data = searchQuery 
-        ? await tmdbService.searchMovies(searchQuery, nextPage)
-        : await tmdbService.getPopularMovies(nextPage);
-      
-      setMovies(prev => [...prev, ...data.results]);
-      setCurrentPage(nextPage);
-    } catch (err) {
-      setError('Error al cargar más películas');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    loadFilteredMovies(searchQuery, selectedGenre, currentPage + 1);
   };
 
   const getTitle = () => {
     if (searchQuery) {
       return `Resultados para "${searchQuery}"`;
     }
+    if (selectedGenre) {
+      const genreName = genres.find(g => g.id === Number(selectedGenre))?.name;
+      return `Género: ${genreName}`;
+    }
     return 'Películas Populares';
   };
 
   return (
     <div className="space-y-8">
-      <MovieSearch onSearch={handleSearch} onClear={handleClear} />
-      
+      <MovieSearch
+        onSearch={handleSearch}
+        onClear={handleClear}
+        genres={genres}
+        selectedGenre={selectedGenre}
+        onGenreChange={id => loadFilteredMovies(searchQuery, id, 1)}
+      />
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center">
           {error}
         </div>
       )}
-      
+
       {loading && movies.length === 0 ? (
-        <LoadingSpinner message="Buscando películas..." />
+        <LoadingSpinner message="Cargando películas..." />
       ) : (
         <>
           <MovieGrid movies={movies} title={getTitle()} />
-          
+
           {currentPage < totalPages && (
             <div className="text-center">
               <button
