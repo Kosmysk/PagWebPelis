@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { tmdbService } from '../services/tmdb.js';
 
-const MovingBackground = () => {
+const StaticBackground = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -122,4 +122,4 @@ const MovingBackground = () => {
   );
 };
 
-export default MovingBackground;
+export default StaticBackground;

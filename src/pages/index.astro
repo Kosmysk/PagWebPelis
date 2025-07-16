@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import MovieSearchApp from '../components/MovieSearchApp.jsx';
-import MovingBackground from '../components/MovingBackground.jsx';
+import StaticBackground from '../components/StaticBackground.jsx';
 ---
 
 <Layout title="Buscador de Películas">
@@ -35,7 +35,7 @@ import MovingBackground from '../components/MovingBackground.jsx';
   
   <main class="min-h-screen relative">
     <!-- Fondo-->
-    <MovingBackground client:load />
+    <StaticBackground client:load />
     
     <!-- Contenido principal -->
     <div class="relative z-20">

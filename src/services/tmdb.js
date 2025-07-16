@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API_KEY = import.meta.env.PUBLIC_TMDB_API_KEY;
 const BASE_URL = import.meta.env.PUBLIC_TMDB_BASE_URL;
-const IMAGE_BASE_URL = import.meta.env.PUBLIC_TMDB_IMAGE_BASE_URL;
 
 // Configurar axios con la API key
 const tmdbApi = axios.create({
